@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/slimgroup/JUDI.jl.svg?branch=master)](https://travis-ci.org/slimgroup/JUDI.jl)
 
+
 ## Overview
 
 JUDI is a framework for large-scale seismic modeling and inversion and designed to enable rapid translations of algorithms to fast and efficient code that scales to industry-size 3D problems. The focus of the package lies on seismic modeling as well as PDE-constrained optimization such as full-waveform inversion (FWI) and imaging (LS-RTM). Wave equations in JUDI are solved with [Devito](https://github.com/opesci/devito), a Python domain-specific language for automated finite-difference (FD) computations.
@@ -14,14 +15,14 @@ First, install Devito using `pip`, or see the [Devito homepage](https://github.c
 pip install --user git+https://github.com/opesci/devito.git
 ```
 
-For reading and writing seismic SEG-Y data, JUDI uses the [SeisIO](https://github.com/slimgroup/SeisIO.jl) package and matrix-free linear operators are based the [Julia Operator LIbrary](https://github.com/slimgroup/JOLI.jl/tree/master/src) (JOLI):
+For reading and writing seismic SEG-Y data, JUDI uses the [SegyIO](https://github.com/slimgroup/SegyIO.jl) package and matrix-free linear operators are based the [Julia Operator LIbrary](https://github.com/slimgroup/JOLI.jl/tree/master/src) (JOLI):
 
 ```julia
-julia -e 'using Pkg; Pkg.clone("https://github.com/slimgroup/SeisIO.jl.git")'
+julia -e 'using Pkg; Pkg.clone("https://github.com/slimgroup/SegyIO.jl.git")'
 julia -e 'using Pkg; Pkg.clone("https://github.com/slimgroup/JOLI.jl.git")'
 ```
 
-Once Devito, SeisIO and JOLI are installed, you can install JUDI with Julia's `Pkg.clone`. For Devito 3.2.0, it is also necessary to install some Devito dependencies by hand:
+Once Devito, SegyIO and JOLI are installed, you can install JUDI with Julia's `Pkg.clone`. For Devito 3.2.0, it is also necessary to install some Devito dependencies by hand:
 
 ```julia
 julia -e 'using Pkg; Pkg.clone("https://github.com/slimgroup/JUDI.jl")'
@@ -78,7 +79,7 @@ run(`wget ftp://slim.gatech.edu/data/SoftwareRelease/WaveformInversion.jl/2DFWI/
 The first step is to load the velocity model and the observed data into Julia, as well as setting up bound constraints for the inversion, which prevent too high or low velocities in the final result. Furthermore, we define an 8 Hertz Ricker wavelet as the source function:
 
 ```julia
-using PyPlot, HDF5, SeisIO, JUDI.TimeModeling, JUDI.SLIM_optim, Statistics, Random
+using PyPlot, HDF5, SegyIO, JUDI.TimeModeling, JUDI.SLIM_optim, Statistics, Random
 
 # Load starting model
 n, d, o, m0 = read(h5open("overthrust_2D_initial_model.h5", "r"), "n", "d", "o", "m0")
@@ -155,7 +156,7 @@ run(`wget ftp://slim.gatech.edu/data/SoftwareRelease/Imaging.jl/2DLSRTM/marmousi
 Once again, load the starting model and the data and set up the source wavelet. For this example, we use a Ricker wavelet with 30 Hertz peak frequency. For setting up matrix-free linear operators, an `info` structure with the dimensions of the problem is required:
 
 ```julia
-using PyPlot, HDF5, JUDI.TimeModeling, SeisIO, Random
+using PyPlot, HDF5, JUDI.TimeModeling, SegyIO, Random
 
 # Load smooth migration velocity model
 n,d,o,m0 = read(h5open("marmousi_migration_velocity.h5","r"), "n", "d", "o", "m0")
